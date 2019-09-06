@@ -1,0 +1,1 @@
+Este directorio utilizarlo para almacenar archivos de carga de datos
