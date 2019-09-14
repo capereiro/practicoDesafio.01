@@ -26,3 +26,11 @@ def busca_claves(pattern, columna, df_aux):
     regex = re.compile(pattern, flags = re.IGNORECASE)
     m = pd.DataFrame([regex.findall(n) for n in df_aux[columna]])
     return m[0]
+
+# ------------------------------
+# Reemplaza NaN's por el valor de la clave ingresada
+# Entrada: clave, df
+# Salida: DataFrame
+
+def reemplaza_nan(clave, df):
+    return df.replace(np.nan,clave)
