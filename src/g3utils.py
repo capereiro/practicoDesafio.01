@@ -4,16 +4,13 @@ import re as re
 
 
 # ------------------------------
-# Cambia los literales numericos x floats. En caso de no detectar la clave en un diccionario, reemplaza por NaN.
+# Busca las claves reconocidas en el diccionario y reemplaza por su significado. En caso de no detectar la clave en un diccionario, reemplaza por NaN.
 # El reemplazo x NaN se hace para poder realizar operaciones.
-# Mejoras: debiera recibir diccionario y lista_prop como parametros para dejar una función polimorfica. 
-# Entrada: DataFrame
+# Entrada: diccionario con claves a buscar, DataFrame
 # Salida: DataFrame
 
-def cambiar_x_nros(df):
-    dic = {'mono': 1, 'un':1, 'uno':1, 'dos':2, 'tres':3, 'cuatro':4, 'cinco':5 ,'seis':6 ,'siete':7}
-    lista_prop = ['mono','un','uno','dos','tres','cuatro','cinco','seis','siete']
-    serie_1 = pd.Series([x if x not in lista_prop else dic.get(x) for x in df])
+def limpiar_columna_x_clave(dic, df):
+    serie_1 = pd.Series([x if x not in dic else dic.get(x) for x in df])
     serie_2 = pd.to_numeric(serie_1, errors='coerse', downcast='float') # coerse: pasa a NaN los no-numericos
     return pd.DataFrame(serie_2)
 
@@ -34,3 +31,12 @@ def busca_claves(pattern, columna, df_aux):
 
 def reemplaza_nan(clave, df):
     return df.replace(np.nan,clave)
+
+# ------------------------------
+# Confecciona DataFrame limpio y definitivo para su uso
+# Entrada: nueva columna, df1, df2
+# Salida: DataFrame
+
+def agregar_columna(columna, df_original, df_nuevo):
+    df_original[columna] = df_nuevo
+    return  df_original
