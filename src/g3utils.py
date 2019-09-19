@@ -10,6 +10,12 @@ import re as re
 # Salida: DataFrame
 
 def limpiar_columna_x_clave(dic, df):
+    """Form a complex number.
+
+    Keyword arguments:
+    real -- the real part (default 0.0)
+    imag -- the imaginary part (default 0.0)
+    """
     serie_1 = pd.Series([x if x not in dic else dic.get(x) for x in df])
     serie_2 = pd.to_numeric(serie_1, errors='coerse', downcast='float') # coerse: pasa a NaN los no-numericos
     return pd.DataFrame(serie_2)
