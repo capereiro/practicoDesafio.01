@@ -47,8 +47,9 @@ def registrar_recupero(valor, colu, df_recup):
     -----------
     arg : valor, colu
     
-    valor -- cant recuperada de datos del feature
+    valor -- cant datos recuperados del feature
     colu -- nombre de columna (feature)
+    df_recup -- data frame con valores recuperados por columna
     
     Returns:
     --------
@@ -58,13 +59,13 @@ def registrar_recupero(valor, colu, df_recup):
     if df_recup.size == 0:     
         #recup = pd.DataFrame([valor], columns=[colu])
         df_recup = pd.DataFrame([valor], columns=[colu])
-        print('primer dato en df')
+#         print('primer dato en df')
     elif colu not in df_recup.columns:
         df_recup[colu] = [valor+1]
-        print('columna creada')
+#         print('columna creada')
     else:
         df_recup[colu] = [valor+2]
-        print('columna existente')
+#         print('columna existente')
     df_recup.to_csv(r'../data/valores_recuperados.csv', encoding='utf-8')
     return df_recup
 
@@ -141,6 +142,30 @@ def busca_claves(pattern, columna, df_aux):
 def reemplaza_nan(clave, df):
     return df.replace(np.nan,clave)
 
+
+# ------------------------------
+# Reemplaza NaN's por el valor de la clave ingresada
+# Entrada: clave, df
+# Salida: DataFrame
+
+def reemplaza_x_por_valor(dic, df, valor=None):
+    """
+    Devuelve data frame de entrada con valores reemplazados según diccionario
+    
+    Parameters:
+    -----------
+    arg : nfilas
+    
+    nfilas -- cantidad de filas
+    
+    Returns:
+    --------
+    ret : data frame indice de posproduccion.
+    
+    """
+    df_temp = [x if x not in dic else dic.get(x) for x in df]
+    return df_temp
+
 # ------------------------------
 # Confecciona DataFrame limpio y definitivo para su uso
 # Entrada: nueva columna, df1, df2
@@ -198,3 +223,25 @@ def existe_clave(key, columna, df_aux):
         else:
             m.append(False)
     return sum(m)
+
+# ------------------------------
+
+def crear_csv(nombre, df):
+    """
+    Crea archivo csv
+    
+    Parameters:
+    -----------
+    arg : nombre, df
+    
+    nombre -- nombre de archivo
+    df -- data frame a persistir
+    
+    Returns:
+    --------
+    ret : cantidad de valores encontrados
+    """
+    
+    ruta = '../data/'+nombre
+    df.to_csv(ruta, encoding='utf-8')
+    return print('[LOG] Se ha creado el archivo: ',nombre)
