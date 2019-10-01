@@ -5,6 +5,39 @@ import re as re
 
 # ------------------------------
 
+def obtener_df_indexado_booleano(df, ncol, clave=None):
+    """
+    Busca en datos no-None y confecciona un data frame indexado incluyendo nombres a las columnas.
+    Adicionalmente puede buscar por una clave distinta de None que puede ingresarse como parámetro.
+    A diferencia de 'obtener_df_indexado', 'obtener_df_indexado_simple' operara sobre estructuras de datos simples como un str o int
+
+    Parameters:
+    -----------
+    arg : df, ncol, clave [Opcional, default = None]
+    
+    df -- data frame
+    ncol -- nombre de columna indexada
+    clave -- parámetro opcional. Clave distinta de None. Por defecto es None
+    
+    Returns:
+    --------
+    df_ret : data frame de dos dimensiones (indice & ncol).
+    
+    """
+
+    l_ind = []
+    l_col = []
+    for i in range(len(df.index)):
+        if df.iloc[i] != clave:
+            l_ind.append(i)
+            l_col.append(1.00)
+    df_ret = pd.DataFrame(l_ind, columns={'indice'})
+    df_ret[ncol] = pd.DataFrame(l_col)
+    return df_ret
+
+
+# ------------------------------
+
 def obtener_df_indexado_simple(df, ncol, clave=None):
     """
     Busca en datos no-None y confecciona un data frame indexado incluyendo nombres a las columnas.
