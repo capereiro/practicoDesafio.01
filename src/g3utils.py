@@ -4,12 +4,14 @@ import re as re
 
 
 # ------------------------------
+# Listado de funciones utilizadas para la recuperación de datos regex
+# ------------------------------
 
 def obtener_df_indexado_booleano(df, ncol, clave=None):
     """
-    Busca en datos no-None y confecciona un data frame indexado incluyendo nombres a las columnas.
+    Busca en datos no-None y confecciona un data frame indexado incluyendo nombre a la columna. Si detecta un valor != None entonces reemplaza el valor por 1.00
     Adicionalmente puede buscar por una clave distinta de None que puede ingresarse como parámetro.
-    A diferencia de 'obtener_df_indexado', 'obtener_df_indexado_simple' operara sobre estructuras de datos simples como un str o int
+    A diferencia de 'obtener_df_indexado', 'obtener_df_indexado_booleano' operara sobre estructuras de datos simples como un str o int
 
     Parameters:
     -----------
@@ -158,11 +160,24 @@ def limpiar_columna_x_clave(dic, df):
     return pd.DataFrame(serie_2)
 
 # ------------------------------
-# Busca claves segun pattern en columna dentro de dataFrame 
-# Entrada: pattern, columna, df
-# Salida: DataFrame
 
 def busca_claves(pattern, columna, df_aux):
+    """
+    Busca las claves según pattern, dentro de una columna de un dataframe.
+    
+    Parameters:
+    -----------
+    pattern, columna, df_aux
+    
+    dipattern -- patrón de regex
+    columna -- nombre de característica
+    df -- data frame
+    
+    Returns:
+    --------
+    ret : data frame de una dimensión.
+    
+    """
     regex = re.compile(pattern, flags = re.IGNORECASE)
     m = pd.DataFrame([regex.findall(n) for n in df_aux[columna]])
     return m[0]
@@ -173,17 +188,51 @@ def busca_claves(pattern, columna, df_aux):
 # Salida: DataFrame
 
 def reemplaza_nan(clave, df):
+    """
+    Reemplaza una clave específica por NaN en todo el dataframe
+    
+    Parameters:
+    -----------
+    clave, df
+    
+    clave -- clave de busqueda
+    df -- data frame
+    
+    Returns:
+    --------
+    ret : data frame modificado por clave.
+    """
+    
     return df.replace(np.nan,clave)
 
 
 # ------------------------------
-# Reemplaza NaN's por el valor de la clave ingresada
-# Entrada: clave, df
-# Salida: DataFrame
 
 def reemplaza_x_por_valor(dic, df, valor=None):
     """
-    Devuelve data frame de entrada con valores reemplazados según diccionario
+    Reemplaza valores según claves dentro de un diccionario.
+    
+    Parameters:
+    -----------
+    arg : dic, df, valor
+    
+    dic -- diccionario de claves
+    df -- dataframe
+    valor -- valor a incluir en el reemplazo. Por defecto = None
+    
+    Returns:
+    --------
+    ret : dataframe modificado según claves
+    
+    """
+    df_temp = [x if x not in dic else dic.get(x) for x in df]
+    return df_temp
+
+# ------------------------------
+
+def agregar_columna(columna, df_original, df_nuevo):
+    """
+    Incorpora columnas dentro de un dataframe_01 a partir de la columna del dataframe_02
     
     Parameters:
     -----------
@@ -193,18 +242,9 @@ def reemplaza_x_por_valor(dic, df, valor=None):
     
     Returns:
     --------
-    ret : data frame indice de posproduccion.
+    ret : dataframe.
     
     """
-    df_temp = [x if x not in dic else dic.get(x) for x in df]
-    return df_temp
-
-# ------------------------------
-# Confecciona DataFrame limpio y definitivo para su uso
-# Entrada: nueva columna, df1, df2
-# Salida: DataFrame
-
-def agregar_columna(columna, df_original, df_nuevo):
     df_original[columna] = df_nuevo
     return  df_original
 
@@ -261,7 +301,7 @@ def existe_clave(key, columna, df_aux):
 
 def crear_csv(nombre, df):
     """
-    Crea archivo csv
+    Crea archivo csv con el contenido de un dataframe identificado por un nombre.
     
     Parameters:
     -----------
